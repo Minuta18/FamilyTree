@@ -25,7 +25,7 @@ class Throne:
     def __init__(self, first_king_name: str, year: int):
         # public
         self.kings = list()
-        self.kings.append(Human(first_king_name, MALE))
+        self.kings.append(Human(first_king_name, MALE, year))
         # private
         self.__king_ptr = 0
         self.__year = year
@@ -38,31 +38,30 @@ class Throne:
             if king.name == name:
                 return ind 
 
-    def __get_new_king(self, king: Human, gender: bool|None):
+    def __get_new_king(self, king: Human):
         max_age = -1
         max_child = None
         for king_ in self.kings:
             if king_.father == king:
-                if gender != None or king_.gender == gender:
-                    age = king_.get_age(self.__year)
-                    if age > max_age and king_.alive():
-                        max_child = king_
-                        max_age = age
+                age = king_.get_age(self.__year)
+                if age > max_age and king_.alive():
+                    max_child = king_
+                    max_age = age
         return max_child
 
     def marry(self, husband_name: str, wife_name: str) -> None:
-        h_id = self.find_king(husband_name)
-        self.kings.append(Human(wife_name, FEMALE, husband=self.kings[h_id]))
+        h_id = self.__find_king(husband_name)
+        self.kings.append(Human(wife_name, FEMALE, self.__year, husband=self.kings[h_id]))
         self.kings[h_id].wife = self.kings[-1] 
     
     def new_born(self, name: str, gender: bool) -> None:
-        self.kings.append(Human(name, gender, self.__get_king(), self.__get_king().wife))
+        self.kings.append(Human(name, gender, self.__year, self.__get_king(), self.__get_king().wife))
     
     def die(self, name: str):
         king_ptr = self.__find_king(name)
         self.kings[king_ptr].die()
         if king_ptr == self.__king_ptr:
-            new_king = self.__get_new_king(name)
+            new_king = self.__get_new_king(self.kings[king_ptr])
             self.__king_ptr = self.__find_king(new_king.name)
 
     def simulate(self) -> None:
