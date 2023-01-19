@@ -3,7 +3,7 @@ import networkx as nx
 from networkx.drawing.nx_pydot import graphviz_layout
 import  matplotlib.pyplot as plt
 
-class Visualaser:
+class Visualaser: # Very good code
     def __init__(self, throne: Core.Throne, male_colour='red', female_colour='blue'):
         self.__male_colour = male_colour
         self.__female_colour = female_colour
